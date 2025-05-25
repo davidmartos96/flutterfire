@@ -180,6 +180,10 @@ class FirebaseAuthPlugin : public flutter::Plugin,
       const AuthPigeonFirebaseApp& app, const std::string& authorization_code,
       std::function<void(std::optional<FlutterError> reply)> result) override;
 
+  void FirebaseAuthPlugin::InitializeRecaptchaConfig(
+      const AuthPigeonFirebaseApp& app,
+      std::function<void(std::optional<FlutterError> reply)> result) override;
+
  private:
   static flutter::BinaryMessenger* binaryMessenger;
 };
