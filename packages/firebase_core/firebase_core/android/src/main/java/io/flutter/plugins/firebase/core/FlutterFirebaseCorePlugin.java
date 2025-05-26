@@ -35,16 +35,16 @@ public class FlutterFirebaseCorePlugin
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setup(binding.getBinaryMessenger(), this);
-    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setup(binding.getBinaryMessenger(), this);
+    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setUp(binding.getBinaryMessenger(), this);
+    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setUp(binding.getBinaryMessenger(), this);
     applicationContext = binding.getApplicationContext();
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     applicationContext = null;
-    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setup(binding.getBinaryMessenger(), null);
-    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setup(binding.getBinaryMessenger(), null);
+    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setUp(binding.getBinaryMessenger(), null);
+    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setUp(binding.getBinaryMessenger(), null);
   }
 
   private GeneratedAndroidFirebaseCore.PigeonFirebaseOptions firebaseOptionsToMap(
@@ -109,6 +109,21 @@ public class FlutterFirebaseCorePlugin
                 result.error(exception);
               }
             });
+  }
+
+  private <T> void listenToResponseVoid(
+    TaskCompletionSource<T> taskCompletionSource, GeneratedAndroidFirebaseCore.VoidResult result) {
+    taskCompletionSource
+      .getTask()
+      .addOnCompleteListener(
+        task -> {
+          if (task.isSuccessful()) {
+            result.success();
+          } else {
+            Exception exception = task.getException();
+            result.error(exception);
+          }
+        });
   }
 
   @Override
@@ -222,7 +237,7 @@ public class FlutterFirebaseCorePlugin
   public void setAutomaticDataCollectionEnabled(
       @NonNull String appName,
       @NonNull Boolean enabled,
-      GeneratedAndroidFirebaseCore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseCore.VoidResult result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -237,14 +252,14 @@ public class FlutterFirebaseCorePlugin
           }
         });
 
-    listenToResponse(taskCompletionSource, result);
+    listenToResponseVoid(taskCompletionSource, result);
   }
 
   @Override
   public void setAutomaticResourceManagementEnabled(
       @NonNull String appName,
       @NonNull Boolean enabled,
-      GeneratedAndroidFirebaseCore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseCore.VoidResult result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -259,11 +274,11 @@ public class FlutterFirebaseCorePlugin
           }
         });
 
-    listenToResponse(taskCompletionSource, result);
+    listenToResponseVoid(taskCompletionSource, result);
   }
 
   @Override
-  public void delete(@NonNull String appName, GeneratedAndroidFirebaseCore.Result<Void> result) {
+  public void delete(@NonNull String appName, @NonNull GeneratedAndroidFirebaseCore.VoidResult result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -282,6 +297,6 @@ public class FlutterFirebaseCorePlugin
           }
         });
 
-    listenToResponse(taskCompletionSource, result);
+    listenToResponseVoid(taskCompletionSource, result);
   }
 }
