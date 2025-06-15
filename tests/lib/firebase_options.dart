@@ -31,6 +31,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
+      case TargetPlatform.linux:
         return android;
       default:
         throw UnsupportedError(

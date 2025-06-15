@@ -79,6 +79,9 @@ void main() {
         firebase_auth.main();
         firebase_storage.main();
         break;
+      case TargetPlatform.linux:
+        firebase_core.main();
+        break;
       default:
         throw UnsupportedError(
           '$defaultTargetPlatform is not supported on FlutterFire E2E tests',
